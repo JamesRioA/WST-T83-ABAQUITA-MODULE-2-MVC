@@ -82,20 +82,18 @@ class StudentController extends Controller
     {
         $term = $request->get('term');
         
-        $students = Student::where('name', 'LIKE', "%{$term}%")
+        $users = User::where('name', 'LIKE', "%{$term}%")
             ->orWhere('email', 'LIKE', "%{$term}%")
-            ->with(['user'])
             ->limit(10)
             ->get()
-            ->map(function($student) {
+            ->map(function($users) {
                 return [
-                    'id' => $student->id,
-                    'name' => $student->name,
-                    'email' => $student->email,
-                    'course' => $student->course
+                    'id' => $users->id,
+                    'name' => $users->name,
+                    'email' => $users->email,
                 ];
             });
         
-        return response()->json($students);
+        return response()->json($users);
     }
 }

@@ -38,6 +38,7 @@ Route::middleware(['auth' ,'role:admin'])->group(function () {
     Route::resource('students', StudentController::class);
     Route::resource('subjects', SubjectController::class);
     Route::resource('enrollments', EnrollmentController::class);
+    Route::post('/check-schedule-conflict', [EnrollmentController::class, 'checkScheduleConflict']);
     Route::resource('grades', GradeController::class);
 });
 
@@ -50,23 +51,6 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/student-grade', [GradeController::class, 'studentGrades'])->name('student-grade');
 });
 
-// Add a direct test route for search
-Route::get('/test-search', function(\Illuminate\Http\Request $request) {
-    $term = $request->get('term');
-    
-    if (!$term) {
-        return response()->json(['error' => 'No search term provided']);
-    }
-    
-    $users = \App\Models\User::where(function($query) use ($term) {
-            $query->where('name', 'LIKE', "%{$term}%")
-                ->orWhere('email', 'LIKE', "%{$term}%");
-        })
-        ->limit(10)
-        ->get(['id', 'name', 'email', 'role']);
-    
-    return response()->json($users);
-});
 
 // Add this before or after your other student routes
 Route::get('test-search', [App\Http\Controllers\StudentController::class, 'search'])->name('students.search');
