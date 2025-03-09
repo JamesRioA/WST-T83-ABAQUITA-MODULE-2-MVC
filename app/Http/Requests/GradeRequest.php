@@ -15,9 +15,13 @@ class GradeRequest extends FormRequest
 
     public function rules(): array
     {
-        $validGrades = array_map(function($grade) {
-            return is_numeric($grade) ? number_format($grade, 2) : $grade;
-        }, Grade::VALID_GRADES);
+        $numericGrades = array_filter(Grade::VALID_GRADES, 'is_numeric');
+        $numericGrades = array_map(function($grade) {
+            return number_format($grade, 2);
+        }, $numericGrades);
+        
+        // Add 'INC' to valid grades
+        $validGrades = array_merge($numericGrades, ['INC']);
 
         return [
             'enrollment_id' => 'required|exists:enrollments,id',
@@ -41,6 +45,13 @@ class GradeRequest extends FormRequest
     public function handle(?Grade $grade = null)
     {
         $data = $this->validated();
+        
+        // Convert numeric strings to float, leave 'INC' as string
+        foreach(['midterm_grade', 'final_grade'] as $field) {
+            if ($data[$field] !== 'INC') {
+                $data[$field] = floatval($data[$field]);
+            }
+        }
         
         if ($this->isMethod('post')) {
             $grade = Grade::create($data);

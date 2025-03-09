@@ -26,8 +26,20 @@ class GradeController extends Controller
      */
     public function studentGrades(Request $request)
     {
+        // Get the authenticated student
+        $student = Auth::user()->student;
+        
+        // Check if user is a student
+        if (!$student) {
+            return view('student.grades.index', [
+                'grades' => collect([]),
+                'schoolYears' => collect([]),
+                'notStudent' => true
+            ]);
+        }
+
         // Get the authenticated student's ID
-        $studentId = Auth::user()->student->id;
+        $studentId = $student->id;
         
         // Get unique school years for the filter
         $schoolYears = Enrollment::where('student_id', $studentId)

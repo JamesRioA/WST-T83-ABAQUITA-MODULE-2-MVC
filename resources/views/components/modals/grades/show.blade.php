@@ -13,7 +13,7 @@
             </div>
             <div class="mb-3">
                 <label class="fw-bold">Subject:</label>
-                <p>{{ $grade->enrollment->subject->code }} - {{ $grade->enrollment->subject->name }}</p>
+                <p>{{ $grade->enrollment->subject->subject_code }} - {{ $grade->enrollment->subject->subject_description }}</p>
             </div>
             <div class="mb-3">
                 <label class="fw-bold">School Year:</label>
@@ -25,22 +25,24 @@
             </div>
             <div class="mb-3">
                 <label class="fw-bold">Midterm Grade:</label>
-                <p>{{ number_format($grade->midterm, 2) }}</p>
+                <p>{{ $grade->midterm_grade }}</p>
             </div>
             <div class="mb-3">
                 <label class="fw-bold">Finals Grade:</label>
-                <p>{{ number_format($grade->finals, 2) }}</p>
+                <p>{{ $grade->final_grade }}</p>
             </div>
             <div class="mb-3">
                 <label class="fw-bold">Average:</label>
-                <p>{{ number_format($grade->average, 2) }}</p>
+                <p>{{ $grade->average_grade }}</p>
             </div>
-            @if($grade->remarks)
             <div class="mb-3">
                 <label class="fw-bold">Remarks:</label>
-                <p>{{ $grade->remarks }}</p>
+                <p>
+                    <span class="badge badge-sm {{ $grade->remarks === 'Passed' ? 'bg-gradient-success' : ($grade->remarks === 'Incomplete' ? 'bg-gradient-warning' : 'bg-gradient-danger') }}">
+                        {{ $grade->remarks }}
+                    </span>
+                </p>
             </div>
-            @endif
             <div class="mb-3">
                 <label class="fw-bold">Created At:</label>
                 <p>{{ $grade->created_at->format('F d, Y h:i A') }}</p>

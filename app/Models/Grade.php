@@ -17,6 +17,11 @@ class Grade extends Model
 
     protected $appends = ['average_grade', 'remarks'];
 
+    protected $casts = [
+        'midterm_grade' => 'string',
+        'final_grade' => 'string'
+    ];
+
     // Valid grades
     const VALID_GRADES = [
         1.00, 1.25, 1.50, 1.75, 

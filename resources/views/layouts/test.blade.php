@@ -197,29 +197,7 @@
       </div>
     </div>
   </div>
-  <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-  </script>
-  <script>
-    document.addEventListener("contextmenu", function (event) {
-        event.preventDefault();
-    });
 
-    document.addEventListener("keydown", function (event) {
-        // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
-        if (event.key === "F12" || 
-            (event.ctrlKey && event.shiftKey && ["I", "J", "C"].includes(event.key)) || 
-            (event.ctrlKey && event.key === "U")) {
-            event.preventDefault();
-        }
-    });
-</script>
 
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>

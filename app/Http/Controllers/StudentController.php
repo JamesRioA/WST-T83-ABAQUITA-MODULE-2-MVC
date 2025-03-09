@@ -12,9 +12,25 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::paginate(10);
+        $query = Student::query();
+        
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('email', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('course', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('year_level', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+        
+        $students = $query->paginate(10);
+        
+        // Keep the search term in pagination links
+        $students->appends(['search' => $request->search]);
+        
         return view('admin.students.index', compact('students'));
     }
 
@@ -82,18 +98,21 @@ class StudentController extends Controller
     {
         $term = $request->get('term');
         
-        $users = User::where('name', 'LIKE', "%{$term}%")
-            ->orWhere('email', 'LIKE', "%{$term}%")
+        $users = User::where('role', 'student') // Ensure only students are retrieved
+            ->where(function ($query) use ($term) {
+                $query->where('name', 'LIKE', "%{$term}%")
+                      ->orWhere('email', 'LIKE', "%{$term}%");
+            })
             ->limit(10)
             ->get()
-            ->map(function($users) {
+            ->map(function($user) {
                 return [
-                    'id' => $users->id,
-                    'name' => $users->name,
-                    'email' => $users->email,
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
                 ];
             });
-        
+
         return response()->json($users);
     }
 }

@@ -13,15 +13,19 @@
             </div>
             <div class="mb-3">
                 <label class="fw-bold">Subject:</label>
-                <p>{{ $enrollment->subject->code }} - {{ $enrollment->subject->name }}</p>
+                <p>{{ $enrollment->subject->subject_code }} - {{ $enrollment->subject->subject_description }}</p>
             </div>
             <div class="mb-3">
-                <label class="fw-bold">Description:</label>
-                <p>{{ $enrollment->subject->description }}</p>
+                <label class="fw-bold">Subject Description:</label>
+                <p>{{ $enrollment->subject->subject_description }}</p>
             </div>
             <div class="mb-3">
                 <label class="fw-bold">Units:</label>
                 <p>{{ $enrollment->subject->units }}</p>
+            </div>
+            <div class="mb-3">
+                <label class="fw-bold">Section:</label>
+                <p>{{ $enrollment->section }}</p>
             </div>
             <div class="mb-3">
                 <label class="fw-bold">School Year:</label>

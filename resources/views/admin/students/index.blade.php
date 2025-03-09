@@ -26,6 +26,12 @@
                             <i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Student
                         </button>
                     </div>
+                    <div class="mt-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search students..." value="{{ request('search') }}">
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
                     @if(session('success'))
@@ -231,6 +237,27 @@ $(document).ready(function() {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Add search functionality
+    let searchTimer;
+    $('#searchInput').on('input', function() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            let searchValue = $(this).val();
+            let url = new URL(window.location.href);
+            
+            if (searchValue) {
+                url.searchParams.set('search', searchValue);
+            } else {
+                url.searchParams.delete('search');
+            }
+            
+            // Reset to first page when searching
+            url.searchParams.delete('page');
+            
+            window.location.href = url.toString();
+        }, 500); // Wait 500ms after user stops typing
     });
 });
 </script>

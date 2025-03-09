@@ -22,6 +22,7 @@
                 <div class="card-header pb-0">
                     <div class="d-flex justify-content-between align-items-center">
                         <h6>My Grades</h6>
+                        @if(!isset($notStudent))
                         <div class="d-flex gap-2">
                             <select class="form-control form-control-sm" id="school_year" style="width: 150px;">
                                 <option value="">All School Years</option>
@@ -38,70 +39,77 @@
                                 <option value="Summer" {{ request('semester') == 'Summer' ? 'selected' : '' }}>Summer</option>
                             </select>
                         </div>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <table class="table align-items-center mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SUBJECT CODE</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">DESCRIPTION</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SECTION</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SEMESTER</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SCHOOL YEAR</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">MIDTERM</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">FINALS</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">AVERAGE</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">REMARKS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($grades as $grade)
-                                <tr>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->subject->subject_code }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->subject->subject_description }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->section }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->semester }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->school_year }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->midterm_grade }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->final_grade }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->average_grade }}</p>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-sm {{ $grade->remarks === 'Passed' ? 'bg-gradient-success' : ($grade->remarks === 'Incomplete' ? 'bg-gradient-warning' : 'bg-gradient-danger') }}">
-                                            {{ $grade->remarks }}
-                                        </span>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="9" class="text-center">
-                                        <p class="text-sm font-weight-bold mb-0">No grades found</p>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="px-3 pt-4">
-                        {{ $grades->links() }}
-                    </div>
+                    @if(isset($notStudent))
+                        <div class="text-center py-4">
+                            <p class="text-lg font-weight-bold">You are not added as a student yet.</p>
+                        </div>
+                    @else
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SUBJECT CODE</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">DESCRIPTION</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SECTION</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SEMESTER</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SCHOOL YEAR</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">MIDTERM</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">FINALS</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">AVERAGE</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">REMARKS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($grades as $grade)
+                                    <tr>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->subject->subject_code }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->subject->subject_description }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->section }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->semester }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->enrollment->school_year }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->midterm_grade }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->final_grade }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0 px-3">{{ $grade->average_grade }}</p>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-sm {{ $grade->remarks === 'Passed' ? 'bg-gradient-success' : ($grade->remarks === 'Incomplete' ? 'bg-gradient-warning' : 'bg-gradient-danger') }}">
+                                                {{ $grade->remarks }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="9" class="text-center">
+                                            <p class="text-sm font-weight-bold mb-0">No grades found</p>
+                                        </td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="px-3 pt-4">
+                            {{ $grades->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

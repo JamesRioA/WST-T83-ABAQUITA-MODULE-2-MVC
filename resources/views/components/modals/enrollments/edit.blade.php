@@ -89,7 +89,6 @@
 
 <script>
 $(document).ready(function() {
-    // Form submission
     $('#editEnrollmentForm').on('submit', function(e) {
         e.preventDefault();
         
@@ -102,11 +101,9 @@ $(document).ready(function() {
             type: 'POST',
             data: form.serialize(),
             success: function(response) {
-                // Hide the modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('modal'));
                 modal.hide();
                 
-                // Show success message using SweetAlert2
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
@@ -115,12 +112,6 @@ $(document).ready(function() {
                     timer: 1500
                 });
                 
-                // Use the parent page's showAlert function if available
-                if (typeof window.showAlert === 'function') {
-                    window.showAlert('success', response.message);
-                }
-                
-                // Refresh the page after a short delay
                 setTimeout(function() {
                     window.location.reload();
                 }, 1500);
@@ -130,22 +121,21 @@ $(document).ready(function() {
                 let errorMessage = 'An error occurred while updating the enrollment.';
                 
                 if (xhr.responseJSON && xhr.responseJSON.errors) {
-                    errorMessage = Object.values(xhr.responseJSON.errors).flat().join('\n');
+                    const errors = xhr.responseJSON.errors;
+                    if (errors.schedule) {
+                        errorMessage = errors.schedule[0]; // Show schedule conflict error
+                    } else {
+                        errorMessage = Object.values(errors).flat().join('\n');
+                    }
                 } else if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMessage = xhr.responseJSON.message;
                 }
                 
-                // Show error message using SweetAlert2
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
+                    title: 'Schedule Conflict',
                     text: errorMessage
                 });
-                
-                // Use the parent page's showAlert function if available
-                if (typeof window.showAlert === 'function') {
-                    window.showAlert('danger', errorMessage);
-                }
             }
         });
     });
